@@ -8,8 +8,8 @@ get '/' do
 end
 
 get '/login' do
-	app_key = 'imizwwjuoo2wn6j'
-	app_secret = 'xoe8wjyvmocpq43'
+	app_key = ''
+	app_secret = ''
 	dropbox_session = DropboxSession.new(app_key, app_secret)
 	session[:dropbox] = dropbox_session.serialize()
 	authorize_url = dropbox_session.get_authorize_url("http://localhost:4567/files")
@@ -23,7 +23,8 @@ get '/files' do
 	dropbox_session = DropboxSession::deserialize(session[:dropbox])
 	dropbox_session.get_access_token rescue redirect '/login'
 	client = DropboxClient.new(dropbox_session, :app_folder)
-	"linked account: "+ client.account_info().inspect
+	#"linked account: "+ client.account_info().inspect
+	files_metadata = client.metadata('/')
 end
 
 get '/logout' do
